@@ -38,22 +38,30 @@ https://wokwi.com/projects/460287833026581505
 
 Limitations of this simulation:
 
-While the processor is busy executing one task, any other command gets disregarded. For example, if the lift is going from floor 0 to floor 2, any call from floor 3 will not register. Using a dedicated controller for the call buttons and then sending the requests on a priority basis to the main controller will solve the problem.
-No safety features (such as IR sensors to prevent door shutdown if a movement is detected on the cab door rail during closing) are implemented.
+1. While the processor is busy executing one task, any other command gets disregarded. For example, if the lift is going from floor 0 to floor 2, any call from floor 3 will not register. Using a dedicated controller for the call buttons and then sending the requests on a priority basis to the main controller will solve the problem.
+2. No safety features (such as IR sensors to prevent door shutdown if a movement is detected on the cab door rail during closing) are implemented.
 
 
 -------------------------------------------------------------------------------------------------------------
 Step 3: The possible integration of AI: In an elevator system, maintenance within a scheduled timeframe is mandatory. However, such routine maintainence effort can always be more effective if a central data logger is used to track the performance of all supporting components. Data logging enables: Trend analysis, Model training and Fault traceability. We can track:
 
 Timestamp: Time of event
+
 Current floor: Position
+
 Direction: UP/DOWN/IDLE
+
 Motor current: Simulated load
+
 Door operation time: Health indicator
+
 Travel time: Between floors
+
 Fault flags: Detected anomalies
 
 The provided elevator.py file simulates these parameters with the help of a GUI and creates a .CSV file as a datalogger. In the real world, an SBC (single-board computer) or a custom board with enough memory can handle this. Even such a setup can communicate with a remote server (cloud).
+
+
 
 Work In Progress (WIP): As a stepping stone, this project is good. But the ultimate target is to build a product with features like Predictive Maintenance (PdM).
 
