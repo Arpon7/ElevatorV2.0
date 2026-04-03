@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "author": "Arpon Bose Dibya",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-mega",
+      "id": "mega",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_floor_0",
+      "top": -48,
+      "left": -220,
+      "attrs": { "color": "green", "label": "Floor 0" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_floor_1",
+      "top": -48,
+      "left": -144,
+      "attrs": { "color": "green", "label": "Floor 1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_floor_2",
+      "top": -48,
+      "left": -68,
+      "attrs": { "color": "green", "label": "Floor 2" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_floor_3",
+      "top": -48,
+      "left": 8,
+      "attrs": { "color": "green", "label": "Floor 3" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_call_1",
+      "top": -192,
+      "left": -144,
+      "attrs": { "color": "blue", "label": "Call 1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_call_2",
+      "top": -192,
+      "left": -68,
+      "attrs": { "color": "blue", "label": "Call 2" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_call_3",
+      "top": -192,
+      "left": 8,
+      "attrs": { "color": "blue", "label": "Call 3" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "sensor_0",
+      "top": 48,
+      "left": -220,
+      "attrs": { "color": "yellow", "label": "Sensor 0" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "sensor_1",
+      "top": 48,
+      "left": -144,
+      "attrs": { "color": "yellow", "label": "Sensor 1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "sensor_2",
+      "top": 48,
+      "left": -68,
+      "attrs": { "color": "yellow", "label": "Sensor 2" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "sensor_3",
+      "top": 48,
+      "left": 8,
+      "attrs": { "color": "yellow", "label": "Sensor 3" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_floor_0",
+      "top": 240,
+      "left": -220,
+      "attrs": { "color": "green", "label": "Floor 0" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_floor_1",
+      "top": 240,
+      "left": -144,
+      "attrs": { "color": "green", "label": "Floor 1" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_floor_2",
+      "top": 240,
+      "left": -68,
+      "attrs": { "color": "green", "label": "Floor 2" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_floor_3",
+      "top": 240,
+      "left": 8,
+      "attrs": { "color": "green", "label": "Floor 3" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_up",
+      "top": 360,
+      "left": -144,
+      "attrs": { "color": "blue", "label": "UP" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_down",
+      "top": 360,
+      "left": -68,
+      "attrs": { "color": "red", "label": "DOWN" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer1",
+      "top": 360,
+      "left": 8,
+      "attrs": { "volume": "0.5" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 259.2,
+      "left": -230.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 259.2,
+      "left": -154.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 259.2,
+      "left": -78.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r4",
+      "top": 259.2,
+      "left": -2.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r5",
+      "top": 379.2,
+      "left": -154.4,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r6",
+      "top": 379.2,
+      "left": -78.4,
+      "attrs": { "value": "220" }
+    }
+  ],
+  "connections": [
+    [ "btn_floor_0:1.l", "mega:6", "green", [ "v0" ] ],
+    [ "btn_floor_0:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "btn_floor_1:1.l", "mega:7", "green", [ "v0" ] ],
+    [ "btn_floor_1:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "btn_floor_2:1.l", "mega:8", "green", [ "v0" ] ],
+    [ "btn_floor_2:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "btn_floor_3:1.l", "mega:9", "green", [ "v0" ] ],
+    [ "btn_floor_3:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "btn_call_1:1.l", "mega:10", "blue", [ "v0" ] ],
+    [ "btn_call_1:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "btn_call_2:1.l", "mega:11", "blue", [ "v0" ] ],
+    [ "btn_call_2:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "btn_call_3:1.l", "mega:12", "blue", [ "v0" ] ],
+    [ "btn_call_3:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "sensor_0:1.l", "mega:2", "yellow", [ "v0" ] ],
+    [ "sensor_0:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "sensor_1:1.l", "mega:3", "yellow", [ "v0" ] ],
+    [ "sensor_1:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "sensor_2:1.l", "mega:4", "yellow", [ "v0" ] ],
+    [ "sensor_2:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "sensor_3:1.l", "mega:5", "yellow", [ "v0" ] ],
+    [ "sensor_3:2.r", "mega:GND.2", "black", [ "v0" ] ],
+    [ "mega:22", "r1:1", "green", [ "v0" ] ],
+    [ "r1:2", "led_floor_0:A", "green", [ "v0" ] ],
+    [ "led_floor_0:C", "mega:GND.3", "black", [ "v0" ] ],
+    [ "mega:24", "r2:1", "green", [ "v0" ] ],
+    [ "r2:2", "led_floor_1:A", "green", [ "v0" ] ],
+    [ "led_floor_1:C", "mega:GND.3", "black", [ "v0" ] ],
+    [ "mega:26", "r3:1", "green", [ "v0" ] ],
+    [ "r3:2", "led_floor_2:A", "green", [ "v0" ] ],
+    [ "led_floor_2:C", "mega:GND.3", "black", [ "v0" ] ],
+    [ "mega:28", "r4:1", "green", [ "v0" ] ],
+    [ "r4:2", "led_floor_3:A", "green", [ "v0" ] ],
+    [ "led_floor_3:C", "mega:GND.3", "black", [ "v0" ] ],
+    [ "mega:30", "r5:1", "blue", [ "v0" ] ],
+    [ "r5:2", "led_up:A", "blue", [ "v0" ] ],
+    [ "led_up:C", "mega:GND.3", "black", [ "v0" ] ],
+    [ "mega:32", "r6:1", "red", [ "v0" ] ],
+    [ "r6:2", "led_down:A", "red", [ "v0" ] ],
+    [ "led_down:C", "mega:GND.3", "black", [ "v0" ] ],
+    [ "mega:34", "buzzer1:1", "violet", [ "v0" ] ],
+    [ "buzzer1:2", "mega:GND.3", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

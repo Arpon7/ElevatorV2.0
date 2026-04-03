@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4-Story Elevator System Simulation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+ 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+ 
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+ 
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+ 
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+ 
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+ 
+        /* Building Visualization */
+        .building {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+ 
+        .floor {
+            height: 120px;
+            margin-bottom: 15px;
+            position: relative;
+            background: linear-gradient(to right, #e9ecef 0%, #fff 100%);
+            border-radius: 10px;
+            border: 3px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+ 
+        .floor:last-child {
+            margin-bottom: 0;
+        }
+ 
+        .floor-label {
+            font-size: 2em;
+            font-weight: bold;
+            color: #495057;
+        }
+ 
+        .elevator-shaft {
+            position: absolute;
+            right: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 90px;
+        }
+ 
+        .elevator-car {
+            width: 80px;
+            height: 90px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+ 
+        .elevator-car.moving {
+            animation: elevatorMove 2s ease-in-out;
+        }
+ 
+        .elevator-doors {
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            width: 70px;
+            height: 60px;
+            display: flex;
+            overflow: hidden;
+        }
+ 
+        .door {
+            width: 50%;
+            background: #fff;
+            border: 2px solid #333;
+            transition: transform 0.5s ease;
+        }
+ 
+        .door.left {
+            border-right: 1px solid #333;
+        }
+ 
+        .door.right {
+            border-left: 1px solid #333;
+        }
+ 
+        .elevator-car.doors-open .door.left {
+            transform: translateX(-100%);
+        }
+ 
+        .elevator-car.doors-open .door.right {
+            transform: translateX(100%);
+        }
+ 
+        .floor-indicator {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffc107;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+ 
+        .call-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+ 
+        .call-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+ 
+        .call-button.up {
+            background: #28a745;
+            color: white;
+        }
+ 
+        .call-button.down {
+            background: #dc3545;
+            color: white;
+        }
+ 
+        .call-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+ 
+        .call-button.active {
+            animation: pulse 1s infinite;
+        }
+ 
+        /* Control Panel */
+        .control-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+ 
+        .panel-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+ 
+        .floor-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+ 
+        .floor-button {
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border: 3px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+ 
+        .floor-button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+ 
+        .floor-button.active {
+            background: #ffc107;
+            color: #000;
+            border-color: #ffc107;
+        }
+ 
+        /* Status Panel */
+        .status-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+ 
+        .status-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+ 
+        .status-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+ 
+        .status-value {
+            font-size: 1.3em;
+            color: #333;
+            font-weight: bold;
+        }
+ 
+        .queue-list {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+ 
+        .queue-item {
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+ 
+        .queue-item:last-child {
+            margin-bottom: 0;
+        }
+ 
+        /* Algorithm Info */
+        .algorithm-info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+ 
+        .algorithm-info h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+ 
+        .algorithm-info p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+ 
+        .algorithm-info ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+ 
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+ 
+        @keyframes elevatorMove {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+ 
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+ 
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+ 
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+ 
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 4-Story Elevator System</h1>
+        <p class="subtitle">Interactive Simulation with SCAN Algorithm</p>
+ 
+        <div class="main-content">
+            <!-- Building Visualization -->
+            <div class="building">
+                <div class="floor" id="floor-3">
+                    <div class="floor-label">Floor 3</div>
+                    <div class="elevator-shaft" id="shaft-3"></div>
+                    <div class="call-buttons">
+                        <button class="call-button down" onclick="callElevator(3, 'down')">▼ Down</button>
+                    </div>
+                </div>
+                <div class="floor" id="floor-2">
+                    <div class="floor-label">Floor 2</div>
+                    <div class="elevator-shaft" id="shaft-2"></div>
+                    <div class="call-buttons">
+                        <button class="call-button up" onclick="callElevator(2, 'up')">▲ Up</button>
+                        <button class="call-button down" onclick="callElevator(2, 'down')">▼ Down</button>
+                    </div>
+                </div>
+                <div class="floor" id="floor-1">
+                    <div class="floor-label">Floor 1</div>
+                    <div class="elevator-shaft" id="shaft-1"></div>
+                    <div class="call-buttons">
+                        <button class="call-button up" onclick="callElevator(1, 'up')">▲ Up</button>
+                        <button class="call-button down" onclick="callElevator(1, 'down')">▼ Down</button>
+                    </div>
+                </div>
+                <div class="floor" id="floor-0">
+                    <div class="floor-label">Ground</div>
+                    <div class="elevator-shaft" id="shaft-0"></div>
+                    <div class="call-buttons">
+                        <button class="call-button up" onclick="callElevator(0, 'up')">▲ Up</button>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="panel-title">Inside Elevator Control</div>
+                <div class="floor-buttons">
+                    <button class="floor-button" onclick="pressFloorButton(0)">G</button>
+                    <button class="floor-button" onclick="pressFloorButton(1)">1</button>
+                    <button class="floor-button" onclick="pressFloorButton(2)">2</button>
+                    <button class="floor-button" onclick="pressFloorButton(3)">3</button>
+                </div>
+ 
+                <div class="algorithm-info">
+                    <h3>🧠 SCAN Algorithm</h3>
+                    <p><strong>How it works:</strong></p>
+                    <ul>
+                        <li>Elevator continues in current direction</li>
+                        <li>Serves all requests in that direction</li>
+                        <li>Changes direction when no more requests ahead</li>
+                        <li>Efficient: minimizes back-and-forth movement</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>Example:</strong> If elevator is at Floor 0 going UP and buttons pressed are [2, 1, 3], it will visit: 1 → 2 → 3 (not 2 → 1 → 3)</p>
+                </div>
+            </div>
+ 
+            <!-- Status Panel -->
+            <div class="status-panel">
+                <div class="panel-title">System Status</div>
+                
+                <div class="status-item">
+                    <div class="status-label">Current Floor</div>
+                    <div class="status-value" id="current-floor">Ground</div>
+                </div>
+ 
+                <div class="status-item">
+                    <div class="status-label">State</div>
+                    <div class="status-value" id="elevator-state">IDLE</div>
+                </div>
+ 
+                <div class="status-item">
+                    <div class="status-label">Direction</div>
+                    <div class="status-value" id="direction">---</div>
+                </div>
+ 
+                <div class="status-item">
+                    <div class="status-label">Request Queue</div>
+                    <div class="queue-list" id="queue-display">
+                        <em style="color: #999;">No pending requests</em>
+                    </div>
+                </div>
+ 
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="trips-count">0</div>
+                        <div class="stat-label">Trips</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="floors-traveled">0</div>
+                        <div class="stat-label">Floors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="efficiency">100%</div>
+                        <div class="stat-label">Efficiency</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        // Elevator System Class
+        class ElevatorSystem {
+            constructor() {
+                this.currentFloor = 0;
+                this.state = 'IDLE'; // IDLE, MOVING_UP, MOVING_DOWN, DOORS_OPENING, DOORS_CLOSING
+                this.direction = null; // 'UP' or 'DOWN'
+                this.requestQueue = [];
+                this.isMoving = false;
+                this.tripCount = 0;
+                this.floorsTravel = 0;
+                this.totalRequests = 0;
+                this.createElevatorCar();
+            }
+ 
+            createElevatorCar() {
+                this.elevatorElement = document.createElement('div');
+                this.elevatorElement.className = 'elevator-car';
+                this.elevatorElement.innerHTML = `
+                    <div class="elevator-doors">
+                        <div class="door left"></div>
+                        <div class="door right"></div>
+                    </div>
+                    <div class="floor-indicator">G</div>
+                `;
+                document.getElementById('shaft-0').appendChild(this.elevatorElement);
+            }
+ 
+            addRequest(floor) {
+                if (floor === this.currentFloor && this.state === 'IDLE') {
+                    this.openDoors();
+                    return;
+                }
+ 
+                if (!this.requestQueue.includes(floor)) {
+                    this.requestQueue.push(floor);
+                    this.totalRequests++;
+                    this.updateQueueDisplay();
+                    this.highlightFloorButton(floor, true);
+                    
+                    if (!this.isMoving) {
+                        this.processQueue();
+                    }
+                }
+            }
+ 
+            processQueue() {
+                if (this.requestQueue.length === 0) {
+                    this.state = 'IDLE';
+                    this.direction = null;
+                    this.updateDisplay();
+                    return;
+                }
+ 
+                // SCAN Algorithm: Sort requests based on direction
+                this.requestQueue.sort((a, b) => {
+                    if (this.direction === 'UP') {
+                        // When going up, prioritize floors above current position
+                        if (a >= this.currentFloor && b >= this.currentFloor) {
+                            return a - b; // Ascending order
+                        } else if (a >= this.currentFloor) {
+                            return -1;
+                        } else if (b >= this.currentFloor) {
+                            return 1;
+                        }
+                        return b - a; // Then handle floors below in descending order
+                    } else if (this.direction === 'DOWN') {
+                        // When going down, prioritize floors below current position
+                        if (a <= this.currentFloor && b <= this.currentFloor) {
+                            return b - a; // Descending order
+                        } else if (a <= this.currentFloor) {
+                            return -1;
+                        } else if (b <= this.currentFloor) {
+                            return 1;
+                        }
+                        return a - b; // Then handle floors above in ascending order
+                    } else {
+                        // No direction set, determine based on first request
+                        const nextFloor = this.requestQueue[0];
+                        this.direction = nextFloor > this.currentFloor ? 'UP' : 'DOWN';
+                        return this.direction === 'UP' ? a - b : b - a;
+                    }
+                });
+ 
+                this.moveToNextFloor();
+            }
+ 
+            async moveToNextFloor() {
+                if (this.requestQueue.length === 0) {
+                    this.processQueue();
+                    return;
+                }
+ 
+                const targetFloor = this.requestQueue[0];
+                
+                // Set direction if not set
+                if (!this.direction) {
+                    this.direction = targetFloor > this.currentFloor ? 'UP' : 'DOWN';
+                }
+ 
+                // Check if we need to change direction
+                const hasRequestsInDirection = this.direction === 'UP' 
+                    ? this.requestQueue.some(f => f > this.currentFloor)
+                    : this.requestQueue.some(f => f < this.currentFloor);
+ 
+                if (!hasRequestsInDirection) {
+                    this.direction = this.direction === 'UP' ? 'DOWN' : 'UP';
+                }
+ 
+                this.state = this.direction === 'UP' ? 'MOVING_UP' : 'MOVING_DOWN';
+                this.isMoving = true;
+                this.updateDisplay();
+ 
+                // Animate movement
+                const startFloor = this.currentFloor;
+                const endFloor = targetFloor;
+                const floorsToMove = Math.abs(endFloor - startFloor);
+                
+                this.floorsTravel += floorsToMove;
+ 
+                await this.animateMovement(startFloor, endFloor);
+ 
+                this.currentFloor = endFloor;
+                this.requestQueue.shift();
+                this.highlightFloorButton(endFloor, false);
+                this.tripCount++;
+                
+                await this.openDoors();
+                await this.sleep(2000); // Keep doors open
+                await this.closeDoors();
+ 
+                this.isMoving = false;
+                this.updateDisplay();
+                this.updateStats();
+ 
+                // Continue processing queue
+                setTimeout(() => this.processQueue(), 500);
+            }
+ 
+            async animateMovement(from, to) {
+                const steps = Math.abs(to - from);
+                const direction = to > from ? 1 : -1;
+ 
+                for (let i = 0; i < steps; i++) {
+                    await this.sleep(1000);
+                    const currentPos = from + (direction * (i + 1));
+                    
+                    // Move elevator visually
+                    const oldShaft = document.getElementById(`shaft-${from + direction * i}`);
+                    const newShaft = document.getElementById(`shaft-${currentPos}`);
+                    
+                    if (oldShaft.contains(this.elevatorElement)) {
+                        oldShaft.removeChild(this.elevatorElement);
+                    }
+                    newShaft.appendChild(this.elevatorElement);
+                    
+                    this.elevatorElement.classList.add('moving');
+                    setTimeout(() => this.elevatorElement.classList.remove('moving'), 300);
+ 
+                    // Update floor indicator
+                    const indicator = this.elevatorElement.querySelector('.floor-indicator');
+                    indicator.textContent = currentPos === 0 ? 'G' : currentPos;
+                }
+            }
+ 
+            async openDoors() {
+                this.state = 'DOORS_OPENING';
+                this.updateDisplay();
+                this.elevatorElement.classList.add('doors-open');
+                await this.sleep(800);
+            }
+ 
+            async closeDoors() {
+                this.state = 'DOORS_CLOSING';
+                this.updateDisplay();
+                this.elevatorElement.classList.remove('doors-open');
+                await this.sleep(800);
+            }
+ 
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+ 
+            updateDisplay() {
+                const floorNames = ['Ground', 'Floor 1', 'Floor 2', 'Floor 3'];
+                document.getElementById('current-floor').textContent = floorNames[this.currentFloor];
+                document.getElementById('elevator-state').textContent = this.state;
+                document.getElementById('direction').textContent = this.direction || '---';
+                this.updateQueueDisplay();
+            }
+ 
+            updateQueueDisplay() {
+                const queueDiv = document.getElementById('queue-display');
+                if (this.requestQueue.length === 0) {
+                    queueDiv.innerHTML = '<em style="color: #999;">No pending requests</em>';
+                } else {
+                    const floorNames = ['G', '1', '2', '3'];
+                    queueDiv.innerHTML = this.requestQueue.map((floor, index) => 
+                        `<div class="queue-item">
+                            <span>Floor ${floorNames[floor]}</span>
+                            <span>${index === 0 ? '← Next' : ''}</span>
+                        </div>`
+                    ).join('');
+                }
+            }
+ 
+            updateStats() {
+                document.getElementById('trips-count').textContent = this.tripCount;
+                document.getElementById('floors-traveled').textContent = this.floorsTravel;
+                
+                // Calculate efficiency (ideal vs actual floors traveled)
+                const efficiency = this.totalRequests > 0 
+                    ? Math.round((this.totalRequests / this.floorsTravel) * 100)
+                    : 100;
+                document.getElementById('efficiency').textContent = Math.min(efficiency, 100) + '%';
+            }
+ 
+            highlightFloorButton(floor, active) {
+                const buttons = document.querySelectorAll('.floor-button');
+                buttons[floor].classList.toggle('active', active);
+            }
+        }
+ 
+        // Initialize the system
+        const elevator = new ElevatorSystem();
+ 
+        // UI Functions
+        function pressFloorButton(floor) {
+            elevator.addRequest(floor);
+        }
+ 
+        function callElevator(floor, direction) {
+            elevator.addRequest(floor);
+            
+            // Visual feedback for call button
+            const button = event.target;
+            button.classList.add('active');
+            setTimeout(() => button.classList.remove('active'), 2000);
+        }
+ 
+        // Initial display update
+        elevator.updateDisplay();
+    </script>
+</body>
+</html>
