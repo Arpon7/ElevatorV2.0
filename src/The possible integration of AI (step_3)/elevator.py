@@ -7,19 +7,14 @@ from datetime import datetime
 import numpy as np
 from sklearn.ensemble import IsolationForest
 
-# ==============================
-# GLOBAL STATE
-# ==============================
+
 current_floor = 0
 direction = "IDLE"
 requests = set()
 
 lock = threading.Lock()
 
-# ==============================
-# AI MODEL (ANOMALY DETECTION)
-# ==============================
-# Train with normal data [motor_current, door_time]
+
 X_train = np.array([
     [1.2, 2.0],
     [1.1, 2.1],
@@ -35,9 +30,7 @@ def detect_anomaly(current, door_time):
     pred = model.predict([[current, door_time]])
     return "FAULT" if pred[0] == -1 else "NORMAL"
 
-# ==============================
-# DATA LOGGER (CSV)
-# ==============================
+
 LOG_FILE = "elevator_log.csv"
 
 def init_logger():
@@ -63,9 +56,7 @@ def log_data(floor, direction, motor_current, door_time, status):
             status
         ])
 
-# ==============================
-# CORE FUNCTIONS
-# ==============================
+
 def add_request(floor):
     global requests
     with lock:
@@ -75,7 +66,7 @@ def add_request(floor):
 def simulate_motor_current():
     current = round(random.uniform(1.0, 1.5), 2)
 
-    # Inject occasional fault
+    # occasional fault
     if random.random() < 0.1:
         current += random.uniform(0.8, 1.5)
 
@@ -84,7 +75,7 @@ def simulate_motor_current():
 def simulate_door_time():
     t = round(random.uniform(1.8, 2.2), 2)
 
-    # Inject occasional fault
+
     if random.random() < 0.1:
         t += random.uniform(1.0, 2.0)
 
@@ -108,7 +99,7 @@ def move_to_floor(target):
 
         update_display()
 
-    # Arrived
+
     with lock:
         if target in requests:
             requests.remove(target)
@@ -166,9 +157,7 @@ def scan_algorithm():
             for floor in up_queue:
                 move_to_floor(floor)
 
-# ==============================
-# GUI
-# ==============================
+
 root = tk.Tk()
 root.title("Elevator Simulation with AI + Data Logger")
 root.geometry("420x450")
@@ -183,7 +172,7 @@ tk.Label(root, textvariable=dir_var, font=("Arial", 14)).pack()
 tk.Label(root, textvariable=queue_var, font=("Arial", 12)).pack()
 tk.Label(root, textvariable=status_var, font=("Arial", 12)).pack(pady=10)
 
-# Floor Buttons
+
 for i in range(4):
     tk.Button(
         root,
@@ -197,9 +186,7 @@ def update_display():
     dir_var.set(f"Direction: {direction}")
     queue_var.set(f"Queue: {sorted(list(requests))}")
 
-# ==============================
-# INIT
-# ==============================
+
 init_logger()
 update_display()
 
